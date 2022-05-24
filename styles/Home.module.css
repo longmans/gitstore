@@ -71,6 +71,16 @@
   max-width: 800px;
 }
 
+.new {
+  width: 40%;
+  display: flex;
+  font-size: 1.5rem;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  max-width: 800px;
+}
+
 .card {
   width: 100%;
   margin: 1rem;

@@ -2,7 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   env: {
-    appName: 'gitstore-app'
+    appName: 'gitstore-app',
+    Version: '1.0.0'
   }
 }
 

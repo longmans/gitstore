@@ -4,17 +4,18 @@ import TextField from '@mui/material/TextField'
 import { BsUpload } from 'react-icons/bs'
 import Button from '@mui/material/Button'
 import { WalletSelectButton } from '../components/WalletSelectButton'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Arweave from "arweave"
 import Alert from '@mui/material/Alert'
-
+import { readContract } from 'smartweave'
+import { selectWeightedPstHolder } from 'smartweave'
 
 
 const initProductOptions = {
   host: "arweave.net", // Hostname or IP address for a Arweave host
   port: 443, // Port
   protocol: "https", // Network protocol http or https
-  timeout: 20000, // Network request timeouts in milliseconds
+  timeout: 50000, // Network request timeouts in milliseconds
   logging: false, // Enable network request logging
 }
 
@@ -27,10 +28,14 @@ const initTestOptions = {
 
 export default function New() {
 
-  const arweave = Arweave.init(initTestOptions)
+  const arweave = Arweave.init(initProductOptions)
+  const contractId = 'TcP64M-7DbsTFeI09OcHOW2SeUUGEtN1NydCcI-8AJY'
+  //AR as fee
+  const fee = 0.001
 
   const [isWalletConneted, setIsWalletConnected] = useState(false)
   const [isPosting, setIsPosting] = useState(false)
+  const [isSending, setIsSending] = useState(false)
   const [repoName, setRepoName] = useState("")
   const [repoDesc, setRepoDesc] = useState("")
   const [selectedFile, setSelectedFile] = useState()
@@ -41,10 +46,44 @@ export default function New() {
 
   const [uploadSuccess, setUploadSuccess] = useState(false)
   const [pctComplete, setPctComplete] = useState(0)
+  const [pstHolders, setPstHolders] = useState({})
 
 
 
   let inputRef = React.createRef()
+
+
+  useEffect(() => {
+    readContract(arweave, contractId).then(contractState => {
+      // contractState is the latest state of the contract.
+      // assuming it's a PST token, dump all the balances to the console:
+      console.log("balances:", contractState.balances)
+      const holders = selectWeightedPstHolder(contractState.balances)
+      setPstHolders(holders)
+    })
+    return () => {
+    };
+  }, []);
+
+
+
+  const sendFee = async (e) => {
+    e.preventDefault()
+    //send fee to 
+    setIsSending(true)
+    const tx = await arweave.createTransaction({ target: pstHolders, quantity: arweave.ar.arToWinston(fee) })
+    await arweave.transactions.sign(tx)
+    const response = await arweave.transactions.post(tx)
+    setIsSending(false)
+    if (response.status === 200 || response.status === 208) {
+      console.log(`seed fee success: ${tx.id}`)
+      await postFile()
+    } else {
+      console.error(`seed fee failure: ${tx.id}`)
+    }
+
+  }
+
 
 
   const changeHandler = (event) => {
@@ -69,12 +108,10 @@ export default function New() {
     const address = await window.arweaveWallet.getActiveAddress();
     const balance = await arweave.wallets.getBalance(address);
     const ar = arweave.ar.winstonToAr(balance);
-
     console.log(ar, 'AR');
   }
 
-  const postFile = async (e) => {
-    e.preventDefault()
+  const postFile = async () => {
     console.log("postFile")
     if (!isWalletConneted) {
       setMissWallet(true)
@@ -93,10 +130,11 @@ export default function New() {
     setMissFile(false)
     setUploadSuccess(false)
 
-    await airdrop()
-    await getBalance()
+    //await airdrop()
+    //await getBalance()
 
     setIsPosting(true);
+
     let reader = new FileReader()
     reader.readAsText(selectedFile)
     reader.onload = async () => {
@@ -106,7 +144,7 @@ export default function New() {
       let tx = await arweave.createTransaction({ data: reader.result })
       tx.addTag('App-Name', process.env.appName)
       tx.addTag('Content-Type', selectedFile.type)
-      tx.addTag('Version', '1.0.0')
+      tx.addTag('Version', process.env.Version)
       tx.addTag('File-Name', selectedFile.name)
       tx.addTag('Repo-Name', repoName)
       tx.addTag('Repo-Desc', repoDesc)
@@ -120,7 +158,7 @@ export default function New() {
         );
       }
 
-      console.log("url", `${initTestOptions.protocol}://${initTestOptions.host}:${initTestOptions.port}/${tx.id}`)
+      console.log("url:", `${initProductOptions.protocol}://${initProductOptions.host}:${initProductOptions.port}/${tx.id}`)
       setUploadSuccess(true)
       setIsPosting(false)
     }
@@ -173,11 +211,12 @@ export default function New() {
       </div>
       <br />
       <div className={styles.columnfield}>
-        <Button variant="contained" onClick={postFile}>Submit</Button>
+        <Button variant="contained" onClick={sendFee}>Submit</Button>
       </div>
+      {isSending && <p>Sending {fee}AR as fee...</p>}
       {isMissWallet && <Alert severity="warning">Please connect to wallet first.</Alert>}
       {isMissFile && <Alert severity="warning">Missing upload file.</Alert>}
-      {isPosting && <p>Uploading ${pctComplete}%...</p>}
+      {isPosting && <p>Uploading {pctComplete}%...</p>}
       {uploadSuccess && <Alert severity="success">Success</Alert>}
     </main>
   )

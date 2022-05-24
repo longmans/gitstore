@@ -5,9 +5,9 @@ import Arweave from "arweave"
 import Paper from '@mui/material/Paper'
 import InputBase from '@mui/material/InputBase'
 import IconButton from '@mui/material/IconButton'
-import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
-
+import { GrAddCircle } from 'react-icons/gr'
+import Router from 'next/router'
 
 const initProductOptions = {
   host: "arweave.net", // Hostname or IP address for a Arweave host
@@ -25,7 +25,7 @@ const initTestOptions = {
 
 
 export default function Home() {
-  const arweave = Arweave.init(initTestOptions)
+  const arweave = Arweave.init(initProductOptions)
   const [data, setData] = useState([])
   const [searchInput, setSearchInput] = useState("")
   const [isSearching, setIsSearching] = useState(false)
@@ -191,13 +191,15 @@ export default function Home() {
 
         </Paper>
       </div>
+
+      <div className={styles.new}><GrAddCircle onClick={() => { Router.push("/new") }} /></div>
       <div className={styles.container}>
 
         {isSearching && <p className={styles.searching}>Searching...</p>}
         <div className={styles.grid}>
           {
             data.map((result, i) => getTag(result, "Repo-Name") &&
-              <a key={i} href="https://nextjs.org/docs" className={styles.card}>
+              <a key={i} href={`${initProductOptions.protocol}://${initProductOptions.host}:${initProductOptions.port}/${result.node.id}`} className={styles.card} rel="noreferrer" target="_blank" >
                 <h2>{getTag(result, "Repo-Name")}({getTag(result, "File-Name")})&rarr;</h2>
                 <p>{getTag(result, "Repo-Desc")} </p>
               </a>
