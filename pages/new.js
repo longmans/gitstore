@@ -1,8 +1,8 @@
 import Layout from '../components/layout'
 import styles from '../styles/New.module.css'
 import TextField from '@mui/material/TextField'
-import { BsUpload } from 'react-icons/bs';
-import Button from '@mui/material/Button';
+import { BsUpload } from 'react-icons/bs'
+import Button from '@mui/material/Button'
 import { WalletSelectButton } from '../components/WalletSelectButton'
 import React, { useState } from 'react'
 import Arweave from "arweave"
@@ -32,7 +32,7 @@ export default function New() {
   const [repoName, setRepoName] = useState("")
   const [repoDesc, setRepoDesc] = useState("")
   const [selectedFile, setSelectedFile] = useState()
-  const [isSelect, setIsSelected] = useState(true)
+  const [isSelect, setIsSelected] = useState(false)
   let inputRef = React.createRef()
 
   const changeHandler = (event) => {

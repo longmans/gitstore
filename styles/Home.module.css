@@ -41,6 +41,11 @@
   font-size: 1.5rem;
 }
 
+.searching {
+  line-height: 1.5;
+  font-size: 1.5rem;
+}
+
 .code {
   background: #fafafa;
   border-radius: 5px;
@@ -58,7 +63,16 @@
   max-width: 800px;
 }
 
+.search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 800px;
+}
+
 .card {
+  width: 100%;
   margin: 1rem;
   padding: 1.5rem;
   text-align: left;
@@ -67,7 +81,8 @@
   border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
-  max-width: 300px;
+  /*max-width: 300px;
+  */
 }
 
 .card:hover,
