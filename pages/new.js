@@ -6,6 +6,8 @@ import Button from '@mui/material/Button'
 import { WalletSelectButton } from '../components/WalletSelectButton'
 import React, { useState } from 'react'
 import Arweave from "arweave"
+import Alert from '@mui/material/Alert'
+
 
 
 const initProductOptions = {
@@ -33,7 +35,17 @@ export default function New() {
   const [repoDesc, setRepoDesc] = useState("")
   const [selectedFile, setSelectedFile] = useState()
   const [isSelect, setIsSelected] = useState(false)
+  const [isMissName, setMissName] = useState(false)
+  const [isMissFile, setMissFile] = useState(false)
+  const [isMissWallet, setMissWallet] = useState(false)
+
+  const [uploadSuccess, setUploadSuccess] = useState(false)
+  const [pctComplete, setPctComplete] = useState(0)
+
+
+
   let inputRef = React.createRef()
+
 
   const changeHandler = (event) => {
     if (!event.target.files) {
@@ -61,14 +73,28 @@ export default function New() {
     console.log(ar, 'AR');
   }
 
-  const postFile = async () => {
+  const postFile = async (e) => {
+    e.preventDefault()
     console.log("postFile")
-    if (!setRepoName || !isSelect || !selectedFile) {
-      console.log("some field is miss.")
+    if (!isWalletConneted) {
+      setMissWallet(true)
       return
     }
-    //await airdrop()
-    //await getBalance()
+    setMissWallet(false)
+    if (!repoName) {
+      setMissName(true)
+      return
+    }
+    setMissName(false)
+    if (!selectedFile) {
+      setMissFile(true)
+      return
+    }
+    setMissFile(false)
+    setUploadSuccess(false)
+
+    await airdrop()
+    await getBalance()
 
     setIsPosting(true);
     let reader = new FileReader()
@@ -88,11 +114,14 @@ export default function New() {
       const uploader = await arweave.transactions.getUploader(tx);
       while (!uploader.isComplete) {
         await uploader.uploadChunk();
+        setPctComplete(uploader.pctComplete)
         console.log(
           `${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`
         );
       }
+
       console.log("url", `${initTestOptions.protocol}://${initTestOptions.host}:${initTestOptions.port}/${tx.id}`)
+      setUploadSuccess(true)
       setIsPosting(false)
     }
   }
@@ -119,10 +148,12 @@ export default function New() {
       <div className={styles.columnfield}>
         <TextField
           required
+          error={isMissName}
           id="outlined-required"
           label="Repository name"
           defaultValue=""
           onChange={(e) => setRepoName(e.target.value)}
+          helperText="Repository name required"
         />
 
         <br />
@@ -144,7 +175,10 @@ export default function New() {
       <div className={styles.columnfield}>
         <Button variant="contained" onClick={postFile}>Submit</Button>
       </div>
-
+      {isMissWallet && <Alert severity="warning">Please connect to wallet first.</Alert>}
+      {isMissFile && <Alert severity="warning">Missing upload file.</Alert>}
+      {isPosting && <p>Uploading ${pctComplete}%...</p>}
+      {uploadSuccess && <Alert severity="success">Success</Alert>}
     </main>
   )
 }
