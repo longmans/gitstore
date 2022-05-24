@@ -1,0 +1,25 @@
+.main {
+  display: flex;
+  height: calc(100vh - 64px);
+  background-color: white;
+}
+
+.main > section {
+  padding: 32px;
+}
+
+.footer {
+  display: flex;
+  flex: 1;
+  padding: 2rem 0;
+  border-top: 1px solid #eaeaea;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}

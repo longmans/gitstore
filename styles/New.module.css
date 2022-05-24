@@ -1,0 +1,54 @@
+.main {
+  min-height: 100vh;
+  padding: 4rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 40%;
+  padding: 0 2rem;
+}
+
+.description {
+  color: gray;
+}
+
+.columnfield {
+  width: 40%;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.rowfield {
+  width: 40%;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.wallet {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.wallet span {
+  display: flex;
+  flex: 5;
+}
+
+.wallet div {
+  display: flex;
+  flex: 1;
+}
