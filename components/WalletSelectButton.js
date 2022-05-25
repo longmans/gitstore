@@ -46,14 +46,12 @@ const WalletButton = (props) => {
     case AR_CONNECT:
       return (
         <div className={styles.walletButton}>
-          <Image unoptimized src="ArConnect_Logo.png" alt="wallet icon" />
           <p>{props.walletAddress}</p>
         </div>
       );
     case ARWEAVE_APP:
       return (
         <div className={styles.walletButton}>
-          <Image unoptimized src="ArweaveApp_Logo.svg" alt="wallet icon" />
           <p>{props.walletAddress}</p>
         </div>
       );
@@ -70,7 +68,7 @@ const WalletModal = (props) => {
   async function connectWallet(walletName) {
     switch (walletName) {
       case AR_CONNECT:
-        await window.arweaveWallet.connect(['ACCESS_ADDRESS','SIGN_TRANSACTION', 'DISPATCH']);
+        await window.arweaveWallet.connect(['ACCESS_ADDRESS', 'SIGN_TRANSACTION', 'DISPATCH']);
         break;
       case ARWEAVE_APP:
         break;
@@ -98,14 +96,12 @@ const WalletModal = (props) => {
               onClick={() => connectWallet(AR_CONNECT)}
             >
               <p>ArConnect</p>
-              <Image unoptimized src="ArConnect_Logo.png" alt="ArConnect icon" />
             </button>
             <button
               className={styles.selectButton}
               onClick={() => connectWallet(ARWEAVE_APP)}
             >
               <p>Arweave.app</p>
-              <Image unoptimized src="ArweaveApp_Logo.svg" alt="ArweaveApp icon" />
             </button>
           </div>
         </div>

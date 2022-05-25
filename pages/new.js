@@ -67,8 +67,7 @@ export default function New() {
 
 
 
-  const sendFee = async (e) => {
-    e.preventDefault()
+  const sendFee = async () => {
     //send fee to 
     setIsSending(true)
     const tx = await arweave.createTransaction({ target: pstHolders, quantity: arweave.ar.arToWinston(fee) })
@@ -77,11 +76,11 @@ export default function New() {
     setIsSending(false)
     if (response.status === 200 || response.status === 208) {
       console.log(`seed fee success: ${tx.id}`)
-      await postFile()
+      return true
     } else {
       console.error(`seed fee failure: ${tx.id}`)
+      return false
     }
-
   }
 
 
@@ -111,7 +110,8 @@ export default function New() {
     console.log(ar, 'AR');
   }
 
-  const postFile = async () => {
+  const postFile = async (e) => {
+    e.preventDefault()
     console.log("postFile")
     if (!isWalletConneted) {
       setMissWallet(true)
@@ -133,7 +133,15 @@ export default function New() {
     //await airdrop()
     //await getBalance()
 
+
     setIsPosting(true);
+    let isSuccess = await sendFee()
+    if (!isSuccess){
+      console.error("can't post file")
+      setUploadSuccess(false)
+      setIsPosting(false)
+      return
+    }
 
     let reader = new FileReader()
     reader.readAsText(selectedFile)
@@ -211,7 +219,7 @@ export default function New() {
       </div>
       <br />
       <div className={styles.columnfield}>
-        <Button variant="contained" onClick={sendFee}>Submit</Button>
+        <Button variant="contained" onClick={postFile}>Submit</Button>
       </div>
       {isSending && <p>Sending {fee}AR as fee...</p>}
       {isMissWallet && <Alert severity="warning">Please connect to wallet first.</Alert>}

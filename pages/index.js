@@ -192,7 +192,7 @@ export default function Home() {
         </Paper>
       </div>
 
-      <div className={styles.new}><GrAddCircle onClick={() => { Router.push("/new") }} /></div>
+      <div className={styles.new}  onClick={() => { Router.push("/new") }} ><GrAddCircle/></div>
       <div className={styles.container}>
 
         {isSearching && <p className={styles.searching}>Searching...</p>}

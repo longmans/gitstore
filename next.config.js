@@ -9,7 +9,7 @@ const nextConfig = {
   trailingSlash: true,
   exportPathMap: function() {
     return {
-      "/": { page: "/" }
+      "/": { page: "/" },
     };
   },
   assetPrefix: '.',
