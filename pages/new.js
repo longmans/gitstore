@@ -36,6 +36,7 @@ export default function New() {
   const [isWalletConneted, setIsWalletConnected] = useState(false)
   const [isPosting, setIsPosting] = useState(false)
   const [isSending, setIsSending] = useState(false)
+  const [sendFailureMsg, setSendFailureMsg] = useState("")
   const [repoName, setRepoName] = useState("")
   const [repoDesc, setRepoDesc] = useState("")
   const [selectedFile, setSelectedFile] = useState()
@@ -70,6 +71,7 @@ export default function New() {
   const sendFee = async () => {
     //send fee to 
     setIsSending(true)
+    setSendFailureMsg("")
     const tx = await arweave.createTransaction({ target: pstHolders, quantity: arweave.ar.arToWinston(fee) })
     await arweave.transactions.sign(tx)
     const response = await arweave.transactions.post(tx)
@@ -79,6 +81,7 @@ export default function New() {
       return true
     } else {
       console.error(`seed fee failure: ${tx.id}`)
+      setSendFailureMsg(`seed fee failure: ${tx.id}`)
       return false
     }
   }
@@ -222,6 +225,7 @@ export default function New() {
         <Button variant="contained" onClick={postFile}>Submit</Button>
       </div>
       {isSending && <p>Sending {fee}AR as fee...</p>}
+      {!isSending && sendFailureMsg && <p>{sendFailureMsg}</p>}
       {isMissWallet && <Alert severity="warning">Please connect to wallet first.</Alert>}
       {isMissFile && <Alert severity="warning">Missing upload file.</Alert>}
       {!isSending && isPosting && <p>Uploading {pctComplete}%...</p>}
