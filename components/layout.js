@@ -20,7 +20,7 @@ export default function Layout({ children }) {
                 >
                     Powered by{' '}
                     <span className={styles.logo}>
-                        <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
+                        <Image unoptimized src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
                     </span>
                 </a>
             </footer>

@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import styles from "../styles/WalletSelectButton.module.css";
+import Image from 'next/image'
+
 
 const NONE = "None";
 const AR_CONNECT = "ArConnect";
@@ -44,14 +46,14 @@ const WalletButton = (props) => {
     case AR_CONNECT:
       return (
         <div className={styles.walletButton}>
-          <img src="ArConnect_Logo.png" alt="wallet icon" />
+          <Image unoptimized src="ArConnect_Logo.png" alt="wallet icon" />
           <p>{props.walletAddress}</p>
         </div>
       );
     case ARWEAVE_APP:
       return (
         <div className={styles.walletButton}>
-          <img src="ArweaveApp_Logo.svg" alt="wallet icon" />
+          <Image unoptimized src="ArweaveApp_Logo.svg" alt="wallet icon" />
           <p>{props.walletAddress}</p>
         </div>
       );
@@ -96,14 +98,14 @@ const WalletModal = (props) => {
               onClick={() => connectWallet(AR_CONNECT)}
             >
               <p>ArConnect</p>
-              <img src="ArConnect_Logo.png" alt="ArConnect icon" />
+              <Image unoptimized src="ArConnect_Logo.png" alt="ArConnect icon" />
             </button>
             <button
               className={styles.selectButton}
               onClick={() => connectWallet(ARWEAVE_APP)}
             >
               <p>Arweave.app</p>
-              <img src="ArweaveApp_Logo.svg" alt="ArweaveApp icon" />
+              <Image unoptimized src="ArweaveApp_Logo.svg" alt="ArweaveApp icon" />
             </button>
           </div>
         </div>
