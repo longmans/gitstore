@@ -6,10 +6,9 @@ const nextConfig = {
     appName: 'gitstore-app',
     Version: '1.0.0'
   },
-  trailingSlash: true,
   exportPathMap: function() {
     return {
-      "/": { page: "/" },
+      "/": { page: "/" }
     };
   },
   assetPrefix: '.',

@@ -224,7 +224,7 @@ export default function New() {
       {isSending && <p>Sending {fee}AR as fee...</p>}
       {isMissWallet && <Alert severity="warning">Please connect to wallet first.</Alert>}
       {isMissFile && <Alert severity="warning">Missing upload file.</Alert>}
-      {isPosting && <p>Uploading {pctComplete}%...</p>}
+      {!isSending && isPosting && <p>Uploading {pctComplete}%...</p>}
       {uploadSuccess && <Alert severity="success">Success</Alert>}
     </main>
   )
