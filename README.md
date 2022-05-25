@@ -45,7 +45,7 @@ Enjoy!
 
 ## Future
 
-Add private repositories
-Add code online clone migration
-Add code online update
+Add private repositories 
+Add code online clone migration  
+Add code online update 
 
